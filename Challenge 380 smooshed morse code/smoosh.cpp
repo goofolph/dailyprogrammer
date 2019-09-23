@@ -25,31 +25,26 @@ std::string smorse(std::string input);
 /* Optional bonus challenge 1.
 
 Find the only sequence that's the code for 13 different words.
-Translated pairs must be sorted by morse.
 */
-std::vector<std::pair<std::string, std::string>> optional1(
-    std::vector<std::pair<std::string, std::string>> sortedTranslations);
+void optional1(std::vector<std::pair<std::string, std::string>> translations);
 
 /* Opional bonus challenge 2.
 
 Find the only word that hase 15 dashes in a row.
 */
-std::pair<std::string, std::string> optional2(
-    std::vector<std::pair<std::string, std::string>> translations);
+void optional2(std::vector<std::pair<std::string, std::string>> translations);
 
 /* Opional bonus challenge 3.
 
 Find the perfectly balanced codes of length 21.
 */
-std::vector<std::pair<std::string, std::string>> optional3(
-    std::vector<std::pair<std::string, std::string>> translations);
+void optional3(std::vector<std::pair<std::string, std::string>> translations);
 
 /* Opional bonus challenge 4.
 
 Find the only 13-letter word that encodes to palindrome.
 */
-std::vector<std::pair<std::string, std::string>> optional4(
-    std::vector<std::pair<std::string, std::string>> translations);
+void optional4(std::vector<std::pair<std::string, std::string>> translations);
 
 /* Sorting function for vector of pairs comparing the morse element.
  */
@@ -112,41 +107,10 @@ int main() {
   assert(dots == 2499157);
   assert(dashes == 1565081);
 
-  // make a copy of translations and sort them by morse
-  std::vector<std::pair<std::string, std::string>> sorted(translations);
-  std::sort(sorted.begin(), sorted.end(), sortbymorse);
-
-  // optional 1
-  auto thirteen = optional1(sorted);
-  std::cout << std::endl
-            << "Optional 1: Only code with exactly 13 inputs" << std::endl;
-  for (auto p : thirteen) {
-    std::cout << p.first << " => " << p.second << std::endl;
-  }
-
-  // optional 2
-  std::cout << std::endl
-            << "Optional 2: Only code with 15 consecutive dashes" << std::endl;
-  auto dashes15 = optional2(translations);
-  std::cout << dashes15.first << " => " << dashes15.second << std::endl;
-
-  // optional 3
-  std::cout << std::endl
-            << "Optional 3: Perfectly balanced codes words of length 21"
-            << std::endl;
-  auto balanced = optional3(translations);
-  for (auto pair : balanced) {
-    std::cout << pair.first << " => " << pair.second << std::endl;
-  }
-
-  // optional 4
-  std::cout << std::endl
-            << "Optional 4: Only 13 letter word that's code is a palidrome"
-            << std::endl;
-  auto palindrome = optional4(translations);
-  for (auto pair : palindrome) {
-    std::cout << pair.first << " => " << pair.second << std::endl;
-  }
+  optional1(translations);
+  optional2(translations);
+  optional3(translations);
+  optional4(translations);
 }
 
 std::string smorse(std::string input) {
@@ -161,10 +125,14 @@ std::string smorse(std::string input) {
   return output;
 }
 
-std::vector<std::pair<std::string, std::string>> optional1(
-    std::vector<std::pair<std::string, std::string>> sorted) {
-  std::vector<std::pair<std::string, std::string>> thirteen;
+void optional1(std::vector<std::pair<std::string, std::string>> translations) {
+  // make a copy of translations and sort them by morse
+  std::vector<std::pair<std::string, std::string>> sorted(translations);
+  std::sort(sorted.begin(), sorted.end(), sortbymorse);
 
+  std::vector<std::pair<std::string, std::string>> thirteen;
+  std::cout << std::endl
+            << "Optional 1: Only code with exactly 13 inputs" << std::endl;
   for (int i = 0; i < sorted.size(); i++) {
     thirteen.clear();
     thirteen.push_back(sorted[i]);
@@ -174,13 +142,13 @@ std::vector<std::pair<std::string, std::string>> optional1(
       j++;
     }
     if (thirteen.size() == 13) {
-      return thirteen;
+      for (auto p : thirteen) {
+        std::cout << p.first << " => " << p.second << std::endl;
+      }
     } else {
       thirteen.clear();
     }
   }
-
-  return thirteen;
 }
 
 bool sortbymorse(const std::pair<std::string, std::string>& a,
@@ -188,26 +156,25 @@ bool sortbymorse(const std::pair<std::string, std::string>& a,
   return (a.second < b.second);
 }
 
-std::pair<std::string, std::string> optional2(
-    std::vector<std::pair<std::string, std::string>> translations) {
-  std::pair<std::string, std::string> found;
-  for (auto pair : translations) {
-    if (pair.second.find("---------------") != std::string::npos) {
-      found = pair;
+void optional2(std::vector<std::pair<std::string, std::string>> translations) {
+  std::cout << std::endl
+            << "Optional 2: Only code with 15 consecutive dashes" << std::endl;
+  for (auto p : translations) {
+    if (p.second.find("---------------") != std::string::npos) {
+      std::cout << p.first << " => " << p.second << std::endl;
     }
   }
-  return found;
 }
 
-std::vector<std::pair<std::string, std::string>> optional3(
-    std::vector<std::pair<std::string, std::string>> translations) {
-  std::vector<std::pair<std::string, std::string>> balanced;
-  for (auto pair : translations) {
-    if (pair.first.length() == 21 && isBalanced(pair.second) == true) {
-      balanced.push_back(pair);
+void optional3(std::vector<std::pair<std::string, std::string>> translations) {
+  std::cout << std::endl
+            << "Optional 3: Perfectly balanced codes words of length 21"
+            << std::endl;
+  for (auto p : translations) {
+    if (p.first.length() == 21 && isBalanced(p.second) == true) {
+      std::cout << p.first << " => " << p.second << std::endl;
     }
   }
-  return balanced;
 }
 
 bool isBalanced(std::string a) {
@@ -229,15 +196,15 @@ bool isBalanced(std::string a) {
   return (dots == dashes);
 }
 
-std::vector<std::pair<std::string, std::string>> optional4(
-    std::vector<std::pair<std::string, std::string>> translations) {
-  std::vector<std::pair<std::string, std::string>> palindromes;
-  for (auto pair : translations) {
-    if (pair.first.length() == 13 && isPalindrome(pair.second)) {
-      palindromes.push_back(pair);
+void optional4(std::vector<std::pair<std::string, std::string>> translations) {
+  std::cout << std::endl
+            << "Optional 4: Only 13 letter word that's code is a palidrome"
+            << std::endl;
+  for (auto p : translations) {
+    if (p.first.length() == 13 && isPalindrome(p.second)) {
+      std::cout << p.first << " => " << p.second << std::endl;
     }
   }
-  return palindromes;
 }
 
 bool isPalindrome(std::string a) {
