@@ -1,6 +1,8 @@
 #include <cassert>
+#include <fstream>
 #include <iostream>
 #include <string>
+#include <vector>
 
 const int alphabet_len = 26;
 const char ascii_alphabet[] = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i',
@@ -10,10 +12,16 @@ const std::string morse_alphabet[] = {
     ".-",   "-...", "-.-.", "-..",  ".",   "..-.", "--.",  "....", "..",
     ".---", "-.-",  ".-..", "--",   "-.",  "---",  ".--.", "--.-", ".-.",
     "...",  "-",    "..-",  "...-", ".--", "-..-", "-.--", "--.."};
+const std::string enable1 = "enable1.txt";
 
 std::string smorse(std::string input);
 
 int main() {
+  std::vector<std::pair<std::string, std::string>> translations;
+  std::ifstream in;
+  unsigned long dots = 0;    // count dots for final check from reddit source
+  unsigned long dashes = 0;  // count dashes for final check from reddit source
+
   std::string sos = smorse("sos");
   std::string daily = smorse("daily");
   std::string programmer = smorse("programmer");
@@ -31,6 +39,26 @@ int main() {
   std::cout << "programmer => " << programmer << std::endl;
   std::cout << "bits => " << bits << std::endl;
   std::cout << "three => " << three << std::endl;
+
+  // read in enable1 word list and translate to smooshed
+  in.open(enable1);
+  for (std::string line; std::getline(in, line);) {
+    std::string smooshed = smorse(line);
+    translations.push_back(std::make_pair(line, smooshed));
+    // count dots and dashes for assertion check
+    for (auto c : smooshed) {
+      if (c == '.') {
+        dots++;
+      } else {
+        dashes++;
+      }
+    }
+  }
+  in.close();
+
+  // make sure proper totals of dots and dashes
+  assert(dots == 2499157);
+  assert(dashes == 1565081);
 }
 
 std::string smorse(std::string input) {
