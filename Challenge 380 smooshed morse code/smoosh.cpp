@@ -133,10 +133,10 @@ void optional1(std::vector<std::pair<std::string, std::string>> translations) {
   std::vector<std::pair<std::string, std::string>> thirteen;
   std::cout << std::endl
             << "Optional 1: Only code with exactly 13 inputs" << std::endl;
-  for (int i = 0; i < sorted.size(); i++) {
+  for (size_t i = 0; i < sorted.size(); i++) {
     thirteen.clear();
     thirteen.push_back(sorted[i]);
-    int j = i + 1;
+    size_t j = i + 1;
     while (j < sorted.size() && sorted[i].second == sorted[j].second) {
       thirteen.push_back(sorted[j]);
       j++;
@@ -208,8 +208,8 @@ void optional4(std::vector<std::pair<std::string, std::string>> translations) {
 }
 
 bool isPalindrome(std::string a) {
-  int i = 0;
-  int j = a.length() - 1;
+  size_t i = 0;
+  size_t j = a.length() - 1;
   while (i < j) {
     if (a[i] != a[j]) {
       return false;
@@ -217,4 +217,5 @@ bool isPalindrome(std::string a) {
     i++;
     j--;
   }
+  return true;
 }
