@@ -124,6 +124,11 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="smoosh.cpp" />
+    <ClCompile Include="smorseeasy.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="alphabet.h" />
+    <ClInclude Include="smorseeasy.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
