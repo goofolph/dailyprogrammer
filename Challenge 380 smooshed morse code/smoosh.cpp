@@ -90,6 +90,10 @@ int main() {
   // read in enable1 word list and translate to smooshed
   in.open(enable1);
   for (std::string line; std::getline(in, line);) {
+    // need to remove trailing \r if present (mostly for non windows)
+    if (line[line.length() - 1] == '\r') {
+      line.erase(line.length() - 1);
+    }
     std::string smooshed = smorse(line);
     translations.push_back(std::make_pair(line, smooshed));
     // count dots and dashes for assertion check
