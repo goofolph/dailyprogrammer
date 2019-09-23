@@ -14,6 +14,11 @@ const std::string morse_alphabet[] = {
     "...",  "-",    "..-",  "...-", ".--", "-..-", "-.--", "--.."};
 const std::string enable1 = "enable1.txt";
 
+/* Translates word to smooshed morse code.
+
+  param input word to be translated must be all lowercase
+  returns smooshed translation
+*/
 std::string smorse(std::string input);
 
 int main() {
@@ -22,18 +27,21 @@ int main() {
   unsigned long dots = 0;    // count dots for final check from reddit source
   unsigned long dashes = 0;  // count dashes for final check from reddit source
 
+  // translate example inputs
   std::string sos = smorse("sos");
   std::string daily = smorse("daily");
   std::string programmer = smorse("programmer");
   std::string bits = smorse("bits");
   std::string three = smorse("three");
 
+  // check example outputs
   assert(sos == "...---...");
   assert(daily == "-...-...-..-.--");
   assert(programmer == ".--..-.-----..-..-----..-.");
   assert(bits == "-.....-...");
   assert(three == "-.....-...");
 
+  // display examples
   std::cout << "sos => " << sos << std::endl;
   std::cout << "daily => " << daily << std::endl;
   std::cout << "programmer => " << programmer << std::endl;
