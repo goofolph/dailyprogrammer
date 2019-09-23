@@ -30,11 +30,30 @@ Translated pairs must be sorted by morse.
 std::vector<std::pair<std::string, std::string>> optional1(
     std::vector<std::pair<std::string, std::string>> sortedTranslations);
 
+/* Opional bonus challenge 2.
+
+Find the only word that hase 15 dashes in a row.
+*/
+std::pair<std::string, std::string> optional2(
+    std::vector<std::pair<std::string, std::string>> translations);
+
+/* Opional bonus challenge 3.
+
+Find the perfectly balanced codes of length 21.
+*/
+std::vector<std::pair<std::string, std::string>> optional3(
+    std::vector<std::pair<std::string, std::string>> translations);
 
 /* Sorting function for vector of pairs comparing the morse element.
  */
 bool sortbymorse(const std::pair<std::string, std::string>& a,
                  const std::pair<std::string, std::string>& b);
+
+/* Checks if code is perfectly balanced.
+
+  A code is perfectly balanced if it hase the same number of dots and dashes.
+*/
+bool isBalanced(std::string a);
 
 int main() {
   std::vector<std::pair<std::string, std::string>> translations;
@@ -87,11 +106,26 @@ int main() {
   std::vector<std::pair<std::string, std::string>> sorted(translations);
   std::sort(sorted.begin(), sorted.end(), sortbymorse);
 
-  std::vector<std::pair<std::string, std::string>> thirteen = optional1(sorted);
+  // optional 1
+  auto thirteen = optional1(sorted);
   std::cout << std::endl
             << "Optional 1: Only code with exactly 13 inputs" << std::endl;
-  for (std::pair<std::string, std::string> p : thirteen) {
+  for (auto p : thirteen) {
     std::cout << p.first << " => " << p.second << std::endl;
+  }
+
+  // optional 2
+  std::cout << std::endl
+            << "Optional 2: Only code with 15 consecutive dashes" << std::endl;
+  auto dashes15 = optional2(translations);
+  std::cout << dashes15.first << " => " << dashes15.second << std::endl;
+
+  // optional 3
+  std::cout << std::endl
+            << "Optional 3: Perfectly balanced codes of length 21" << std::endl;
+  auto balanced = optional3(translations);
+  for (auto pair : balanced) {
+    std::cout << pair.first << " => " << pair.second << std::endl;
   }
 }
 
@@ -132,4 +166,47 @@ std::vector<std::pair<std::string, std::string>> optional1(
 bool sortbymorse(const std::pair<std::string, std::string>& a,
                  const std::pair<std::string, std::string>& b) {
   return (a.second < b.second);
+}
+
+std::pair<std::string, std::string> optional2(
+    std::vector<std::pair<std::string, std::string>> translations) {
+  std::pair<std::string, std::string> found;
+  for (auto pair : translations) {
+    if (pair.second.find("---------------") != std::string::npos) {
+      found = pair;
+    }
+  }
+  return found;
+}
+
+std::vector<std::pair<std::string, std::string>> optional3(
+    std::vector<std::pair<std::string, std::string>> translations) {
+  std::vector<std::pair<std::string, std::string>> balanced;
+  for (auto pair : translations) {
+    if (pair.first.length() == 21 && isBalanced(pair.second) == true) {
+      std::cout << "Is balanced: " << pair.first << " " << pair.second
+                << std::endl;
+      balanced.push_back(pair);
+    }
+  }
+  return balanced;
+}
+
+bool isBalanced(std::string a) {
+  int dots = 0;
+  int dashes = 0;
+  for (auto c : a) {
+    switch (c) {
+      case '.':
+        dots++;
+        break;
+      case '-':
+        dashes++;
+        break;
+      default:
+        assert(false);
+        break;
+    }
+  }
+  return (dots == dashes);
 }
