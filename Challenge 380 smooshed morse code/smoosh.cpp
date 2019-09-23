@@ -137,6 +137,7 @@ void optional1(std::vector<std::pair<std::string, std::string>> translations) {
   std::vector<std::pair<std::string, std::string>> thirteen;
   std::cout << std::endl
             << "Optional 1: Only code with exactly 13 inputs" << std::endl;
+  bool success = false;
   for (size_t i = 0; i < sorted.size(); i++) {
     thirteen.clear();
     thirteen.push_back(sorted[i]);
@@ -146,6 +147,7 @@ void optional1(std::vector<std::pair<std::string, std::string>> translations) {
       j++;
     }
     if (thirteen.size() == 13) {
+      success = true;
       for (auto p : thirteen) {
         std::cout << p.first << " => " << p.second << std::endl;
       }
@@ -153,6 +155,7 @@ void optional1(std::vector<std::pair<std::string, std::string>> translations) {
       thirteen.clear();
     }
   }
+  assert(success);
 }
 
 bool sortbymorse(const std::pair<std::string, std::string>& a,
@@ -163,22 +166,28 @@ bool sortbymorse(const std::pair<std::string, std::string>& a,
 void optional2(std::vector<std::pair<std::string, std::string>> translations) {
   std::cout << std::endl
             << "Optional 2: Only code with 15 consecutive dashes" << std::endl;
+  bool success = false;
   for (auto p : translations) {
     if (p.second.find("---------------") != std::string::npos) {
       std::cout << p.first << " => " << p.second << std::endl;
+      success = true;
     }
   }
+  assert(success);
 }
 
 void optional3(std::vector<std::pair<std::string, std::string>> translations) {
   std::cout << std::endl
             << "Optional 3: Perfectly balanced codes words of length 21"
             << std::endl;
+  int count = 0;
   for (auto p : translations) {
     if (p.first.length() == 21 && isBalanced(p.second) == true) {
       std::cout << p.first << " => " << p.second << std::endl;
+      count++;
     }
   }
+  assert(count == 2);
 }
 
 bool isBalanced(std::string a) {
@@ -204,11 +213,14 @@ void optional4(std::vector<std::pair<std::string, std::string>> translations) {
   std::cout << std::endl
             << "Optional 4: Only 13 letter word that's code is a palidrome"
             << std::endl;
+  bool success = false;
   for (auto p : translations) {
     if (p.first.length() == 13 && isPalindrome(p.second)) {
       std::cout << p.first << " => " << p.second << std::endl;
+      success = true;
     }
   }
+  assert(success);
 }
 
 bool isPalindrome(std::string a) {
