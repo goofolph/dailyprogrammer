@@ -44,6 +44,13 @@ Find the perfectly balanced codes of length 21.
 std::vector<std::pair<std::string, std::string>> optional3(
     std::vector<std::pair<std::string, std::string>> translations);
 
+/* Opional bonus challenge 4.
+
+Find the only 13-letter word that encodes to palindrome.
+*/
+std::vector<std::pair<std::string, std::string>> optional4(
+    std::vector<std::pair<std::string, std::string>> translations);
+
 /* Sorting function for vector of pairs comparing the morse element.
  */
 bool sortbymorse(const std::pair<std::string, std::string>& a,
@@ -54,6 +61,9 @@ bool sortbymorse(const std::pair<std::string, std::string>& a,
   A code is perfectly balanced if it hase the same number of dots and dashes.
 */
 bool isBalanced(std::string a);
+
+/* Checks if string is palindrome. */
+bool isPalindrome(std ::string a);
 
 int main() {
   std::vector<std::pair<std::string, std::string>> translations;
@@ -122,9 +132,19 @@ int main() {
 
   // optional 3
   std::cout << std::endl
-            << "Optional 3: Perfectly balanced codes of length 21" << std::endl;
+            << "Optional 3: Perfectly balanced codes words of length 21"
+            << std::endl;
   auto balanced = optional3(translations);
   for (auto pair : balanced) {
+    std::cout << pair.first << " => " << pair.second << std::endl;
+  }
+
+  // optional 4
+  std::cout << std::endl
+            << "Optional 4: Only 13 letter word that's code is a palidrome"
+            << std::endl;
+  auto palindrome = optional4(translations);
+  for (auto pair : palindrome) {
     std::cout << pair.first << " => " << pair.second << std::endl;
   }
 }
@@ -184,8 +204,6 @@ std::vector<std::pair<std::string, std::string>> optional3(
   std::vector<std::pair<std::string, std::string>> balanced;
   for (auto pair : translations) {
     if (pair.first.length() == 21 && isBalanced(pair.second) == true) {
-      std::cout << "Is balanced: " << pair.first << " " << pair.second
-                << std::endl;
       balanced.push_back(pair);
     }
   }
@@ -209,4 +227,27 @@ bool isBalanced(std::string a) {
     }
   }
   return (dots == dashes);
+}
+
+std::vector<std::pair<std::string, std::string>> optional4(
+    std::vector<std::pair<std::string, std::string>> translations) {
+  std::vector<std::pair<std::string, std::string>> palindromes;
+  for (auto pair : translations) {
+    if (pair.first.length() == 13 && isPalindrome(pair.second)) {
+      palindromes.push_back(pair);
+    }
+  }
+  return palindromes;
+}
+
+bool isPalindrome(std::string a) {
+  int i = 0;
+  int j = a.length() - 1;
+  while (i < j) {
+    if (a[i] != a[j]) {
+      return false;
+    }
+    i++;
+    j--;
+  }
 }
