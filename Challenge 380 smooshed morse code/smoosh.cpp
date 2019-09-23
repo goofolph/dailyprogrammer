@@ -1,3 +1,4 @@
+#include <algorithm>
 #include <cassert>
 #include <fstream>
 #include <iostream>
@@ -20,6 +21,20 @@ const std::string enable1 = "enable1.txt";
   returns smooshed translation
 */
 std::string smorse(std::string input);
+
+/* Optional bonus challenge 1.
+
+Find the only sequence that's the code for 13 different words.
+Translated pairs must be sorted by morse.
+*/
+std::vector<std::pair<std::string, std::string>> optional1(
+    std::vector<std::pair<std::string, std::string>> sortedTranslations);
+
+
+/* Sorting function for vector of pairs comparing the morse element.
+ */
+bool sortbymorse(const std::pair<std::string, std::string>& a,
+                 const std::pair<std::string, std::string>& b);
 
 int main() {
   std::vector<std::pair<std::string, std::string>> translations;
@@ -67,6 +82,17 @@ int main() {
   // make sure proper totals of dots and dashes
   assert(dots == 2499157);
   assert(dashes == 1565081);
+
+  // make a copy of translations and sort them by morse
+  std::vector<std::pair<std::string, std::string>> sorted(translations);
+  std::sort(sorted.begin(), sorted.end(), sortbymorse);
+
+  std::vector<std::pair<std::string, std::string>> thirteen = optional1(sorted);
+  std::cout << std::endl
+            << "Optional 1: Only code with exactly 13 inputs" << std::endl;
+  for (std::pair<std::string, std::string> p : thirteen) {
+    std::cout << p.first << " => " << p.second << std::endl;
+  }
 }
 
 std::string smorse(std::string input) {
@@ -79,4 +105,31 @@ std::string smorse(std::string input) {
     }
   }
   return output;
+}
+
+std::vector<std::pair<std::string, std::string>> optional1(
+    std::vector<std::pair<std::string, std::string>> sorted) {
+  std::vector<std::pair<std::string, std::string>> thirteen;
+
+  for (int i = 0; i < sorted.size(); i++) {
+    thirteen.clear();
+    thirteen.push_back(sorted[i]);
+    int j = i + 1;
+    while (j < sorted.size() && sorted[i].second == sorted[j].second) {
+      thirteen.push_back(sorted[j]);
+      j++;
+    }
+    if (thirteen.size() == 13) {
+      return thirteen;
+    } else {
+      thirteen.clear();
+    }
+  }
+
+  return thirteen;
+}
+
+bool sortbymorse(const std::pair<std::string, std::string>& a,
+                 const std::pair<std::string, std::string>& b) {
+  return (a.second < b.second);
 }
