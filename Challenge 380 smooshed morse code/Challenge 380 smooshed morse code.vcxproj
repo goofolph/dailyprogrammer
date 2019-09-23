@@ -125,10 +125,12 @@
   <ItemGroup>
     <ClCompile Include="smoosh.cpp" />
     <ClCompile Include="smorseeasy.cpp" />
+    <ClCompile Include="smorseinter.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="alphabet.h" />
     <ClInclude Include="smorseeasy.h" />
+    <ClInclude Include="smorseinter.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

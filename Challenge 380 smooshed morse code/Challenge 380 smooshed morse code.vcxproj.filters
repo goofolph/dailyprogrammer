@@ -21,12 +21,18 @@
     <ClCompile Include="smorseeasy.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="smorseinter.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="smorseeasy.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="alphabet.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="smorseinter.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
