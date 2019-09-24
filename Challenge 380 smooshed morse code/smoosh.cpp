@@ -72,6 +72,10 @@ int main() {
   std::cout << std::endl << "Intermidate:" << std::endl;
   bool used[alphabet_len] = {false};  // need this to start the sm_alpha, TODO:
                                       // make a wrapper for this.
+  std::vector<std::string> sols = smalpha(
+      "......-..--...---.-....---...--....--.-..---.....---.-.---..---.-....--."
+      "-.---.-.--");
+  assert(sols.size() == 41);
   std::vector<std::pair<std::string, std::string>> examples;
   // examples given by challenge
   examples.push_back(
