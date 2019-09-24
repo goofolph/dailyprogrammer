@@ -6,8 +6,10 @@
 
 #include "alphabet.h"
 #include "smorseeasy.h"
+#include "smorseinter.h"
 
 const std::string enable1 = "enable1.txt";
+const std::string inputs1000 = "smorse2-bonus1.in";
 
 int main() {
   std::vector<std::pair<std::string, std::string>> translations;
@@ -60,8 +62,59 @@ int main() {
   assert(dots == 2499157);
   assert(dashes == 1565081);
 
+  //// EASY ////
   optional1(translations);
   optional2(translations);
   optional3(translations);
   optional4(translations);
+
+  //// INTERMEDIATE ////
+  std::cout << std::endl << "Intermidate:" << std::endl;
+  bool used[alphabet_len] = {false};  // need this to start the sm_alpha, TODO:
+                                      // make a wrapper for this.
+  std::vector<std::pair<std::string, std::string>> examples;
+  // examples given by challenge
+  examples.push_back(
+      std::make_pair(".--...-.-.-.....-.--........----.-.-..---.---.--.--.-.-.."
+                     "..-..-...-.---..--.----..",
+                     "wirnbfzehatqlojpgcvusyxkmd"));
+  examples.push_back(
+      std::make_pair(".----...---.-....--.-........-----....--.-..-.-..--.--..."
+                     "--..-.---.--..-.-...--..-",
+                     "wzjlepdsvothqfxkbgrmyicuna"));
+  examples.push_back(
+      std::make_pair("..-...-..-....--.---.---.---..-..--....-.....-..-.--.-.-."
+                     "--.-..--.--..--.----..-..",
+                     "uvfsqmjazxthbidyrkcwegponl"));
+  for (auto p : examples) {
+    bool found = false;  // check that example permutation is found
+    auto solutions = sm_alpha(p.first, used);
+    std::cout << "Got " << solutions.size() << " permutations for " << p.first
+              << std::endl;
+    for (auto s : solutions) {
+      auto smo = smorse(s);
+      if (s == p.second) {  // make sure that example output is in my outputs
+        found = true;
+      }
+      assert(smo == p.first);  // assert that the smorse version matches
+      // std::cout << s << std::endl;
+    }
+    assert(found);  // assert example output is found
+  }
+
+  std::vector<std::string> inputs;
+  in.open(inputs1000);
+  for (std::string line; std::getline(in, line);) {
+    // need to remove trailing \r if present (mostly for non windows)
+    if (line[line.length() - 1] == '\r') {
+      line.erase(line.length() - 1);
+    }
+    inputs.push_back(line);
+  }
+  in.close();
+
+  std::cout << inputs.size() << std::endl;
+
+  interOptional1(inputs);
+  // interOptional2();
 }
