@@ -3,6 +3,7 @@
 #include <iostream>
 #include <iterator>
 #include <string>
+#include <thread>
 #include <vector>
 
 #include "alphabet.h"
@@ -48,22 +49,56 @@ std::vector<std::string> sm_alpha(std::string smooshed,
   return solutions;
 }
 
-void interOptional1(std::vector<std::string> inputs) {
-  std::cout << " Intermidiate Bonus 1" << std::endl << std::endl;
-  auto start = std::chrono::steady_clock::now();
-  int count = 1;
-  for (auto i : inputs) {
-    std::cout << "\r" << count << "/" << inputs.size() << std::endl;
-    auto perms = smalpha(i);
-    /*std::cout << i << " has " << perms.size() << " possible solutions"
-              << std::endl;*/
-    count++;
+void interOptional1Thread(std::vector<std::string> inputs, int start,
+                          int stop) {
+  for (int i = start; i < stop && i < inputs.size(); i++) {
+    std::string line = inputs[i];
+    auto perms = smalpha(line);
+    std::cout << line + " has " + std::to_string(perms.size()) +
+                     " possible solutions\n";
   }
+}
+
+void interOptional1(std::vector<std::string> inputs) {
+  std::cout << "Intermidiate Bonus 1" << std::endl << std::endl;
+  int count = 1;
+
+  int threadCount = std::thread::hardware_concurrency();
+
+  std::thread **threads = new std::thread *[threadCount];
+  int threadLines = inputs.size() / threadCount;
+  if (threadCount * threadLines < inputs.size()) threadLines++;
+
+  // used to measure elapsed time
+  auto start = std::chrono::steady_clock::now();
+
+  for (int i = 0; i < threadCount; i++) {
+    int start = i * threadLines;
+    int end = start + threadLines;
+    std::thread *t = new std::thread(interOptional1Thread, inputs, start, end);
+    threads[i] = t;
+  }
+
+  for (int i = 0; i < threadCount; i++) {
+    threads[i]->join();
+  }
+
+  // for (auto i : inputs) {
+  //  std::cout << "\r" << count << "/" << inputs.size() << std::endl;
+  //  auto perms = smalpha(i);
+  //  /*std::cout << i << " has " << perms.size() << " possible solutions"
+  //            << std::endl;*/
+  //  count++;
+  // }
+
+  // display elapsed time
   auto end = std::chrono::steady_clock::now();
   std::cout
       << "Elapsed time "
       << std::chrono::duration_cast<std::chrono::seconds>(end - start).count()
       << std::endl;
+
+  delete[] threads;
 }
 
 void interOptional2() {}
