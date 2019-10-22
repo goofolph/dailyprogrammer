@@ -4,9 +4,12 @@ RM=rm -rf
 
 all: smoosh
 
-smoosh: smoosh.cpp
+smoosh: smoosh.cpp smorseeasy.o smorseinter.o
 	$(CC) $(CFLAGS) -o $@ $^
+
+%.o : %.cpp %.h
+	$(CC) $(CFLAGS) -c $<
 
 .PHONY: clean
 clean:
-	$(RM) smoosh smoosh.exe
+	$(RM) smoosh smoosh.exe *.o

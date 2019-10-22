@@ -1,64 +1,15 @@
-#include <algorithm>
 #include <cassert>
 #include <fstream>
 #include <iostream>
 #include <string>
 #include <vector>
 
-const int alphabet_len = 26;
-const char ascii_alphabet[] = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i',
-                               'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r',
-                               's', 't', 'u', 'v', 'w', 'x', 'y', 'z'};
-const std::string morse_alphabet[] = {
-    ".-",   "-...", "-.-.", "-..",  ".",   "..-.", "--.",  "....", "..",
-    ".---", "-.-",  ".-..", "--",   "-.",  "---",  ".--.", "--.-", ".-.",
-    "...",  "-",    "..-",  "...-", ".--", "-..-", "-.--", "--.."};
+#include "alphabet.h"
+#include "smorseeasy.h"
+#include "smorseinter.h"
+
 const std::string enable1 = "enable1.txt";
-
-/* Translates word to smooshed morse code.
-
-  param input word to be translated must be all lowercase
-  returns smooshed translation
-*/
-std::string smorse(std::string input);
-
-/* Optional bonus challenge 1.
-
-Find the only sequence that's the code for 13 different words.
-*/
-void optional1(std::vector<std::pair<std::string, std::string>> translations);
-
-/* Opional bonus challenge 2.
-
-Find the only word that hase 15 dashes in a row.
-*/
-void optional2(std::vector<std::pair<std::string, std::string>> translations);
-
-/* Opional bonus challenge 3.
-
-Find the perfectly balanced codes of length 21.
-*/
-void optional3(std::vector<std::pair<std::string, std::string>> translations);
-
-/* Opional bonus challenge 4.
-
-Find the only 13-letter word that encodes to palindrome.
-*/
-void optional4(std::vector<std::pair<std::string, std::string>> translations);
-
-/* Sorting function for vector of pairs comparing the morse element.
- */
-bool sortbymorse(const std::pair<std::string, std::string>& a,
-                 const std::pair<std::string, std::string>& b);
-
-/* Checks if code is perfectly balanced.
-
-  A code is perfectly balanced if it hase the same number of dots and dashes.
-*/
-bool isBalanced(std::string a);
-
-/* Checks if string is palindrome. */
-bool isPalindrome(std ::string a);
+const std::string inputs1000 = "smorse2-bonus1.in";
 
 int main() {
   std::vector<std::pair<std::string, std::string>> translations;
@@ -111,127 +62,63 @@ int main() {
   assert(dots == 2499157);
   assert(dashes == 1565081);
 
+  //// EASY ////
   optional1(translations);
   optional2(translations);
   optional3(translations);
   optional4(translations);
-}
 
-std::string smorse(std::string input) {
-  std::string output;
-  for (auto c : input) {
-    for (int i = 0; i < alphabet_len; i++) {
-      if (ascii_alphabet[i] == c) {
-        output += morse_alphabet[i];
+  //// INTERMEDIATE ////
+  std::cout << std::endl << "Intermidate:" << std::endl;
+  bool used[alphabet_len] = {false};  // need this to start the sm_alpha, TODO:
+                                      // make a wrapper for this.
+  std::vector<std::string> sols = smalpha(
+      "......-..--...---.-....---...--....--.-..---.....---.-.---..---.-....--."
+      "-.---.-.--");
+  assert(sols.size() == 41);
+  std::vector<std::pair<std::string, std::string>> examples;
+  // examples given by challenge
+  examples.push_back(
+      std::make_pair(".--...-.-.-.....-.--........----.-.-..---.---.--.--.-.-.."
+                     "..-..-...-.---..--.----..",
+                     "wirnbfzehatqlojpgcvusyxkmd"));
+  examples.push_back(
+      std::make_pair(".----...---.-....--.-........-----....--.-..-.-..--.--..."
+                     "--..-.---.--..-.-...--..-",
+                     "wzjlepdsvothqfxkbgrmyicuna"));
+  examples.push_back(
+      std::make_pair("..-...-..-....--.---.---.---..-..--....-.....-..-.--.-.-."
+                     "--.-..--.--..--.----..-..",
+                     "uvfsqmjazxthbidyrkcwegponl"));
+  for (auto p : examples) {
+    bool found = false;  // check that example permutation is found
+    auto solutions = sm_alpha(p.first, used);
+    std::cout << "Got " << solutions.size() << " permutations for " << p.first
+              << std::endl;
+    for (auto s : solutions) {
+      auto smo = smorse(s);
+      if (s == p.second) {  // make sure that example output is in my outputs
+        found = true;
       }
+      assert(smo == p.first);  // assert that the smorse version matches
+      // std::cout << s << std::endl;
     }
+    assert(found);  // assert example output is found
   }
-  return output;
-}
 
-void optional1(std::vector<std::pair<std::string, std::string>> translations) {
-  // make a copy of translations and sort them by morse
-  std::vector<std::pair<std::string, std::string>> sorted(translations);
-  std::sort(sorted.begin(), sorted.end(), sortbymorse);
-
-  std::vector<std::pair<std::string, std::string>> thirteen;
-  std::cout << std::endl
-            << "Optional 1: Only code with exactly 13 inputs" << std::endl;
-  bool success = false;
-  for (size_t i = 0; i < sorted.size(); i++) {
-    thirteen.clear();
-    thirteen.push_back(sorted[i]);
-    size_t j = i + 1;
-    while (j < sorted.size() && sorted[i].second == sorted[j].second) {
-      thirteen.push_back(sorted[j]);
-      j++;
+  std::vector<std::string> inputs;
+  in.open(inputs1000);
+  for (std::string line; std::getline(in, line);) {
+    // need to remove trailing \r if present (mostly for non windows)
+    if (line[line.length() - 1] == '\r') {
+      line.erase(line.length() - 1);
     }
-    if (thirteen.size() == 13) {
-      success = true;
-      for (auto p : thirteen) {
-        std::cout << p.first << " => " << p.second << std::endl;
-      }
-    } else {
-      thirteen.clear();
-    }
+    inputs.push_back(line);
   }
-  assert(success);
-}
+  in.close();
 
-bool sortbymorse(const std::pair<std::string, std::string>& a,
-                 const std::pair<std::string, std::string>& b) {
-  return (a.second < b.second);
-}
+  std::cout << inputs.size() << std::endl;
 
-void optional2(std::vector<std::pair<std::string, std::string>> translations) {
-  std::cout << std::endl
-            << "Optional 2: Only code with 15 consecutive dashes" << std::endl;
-  bool success = false;
-  for (auto p : translations) {
-    if (p.second.find("---------------") != std::string::npos) {
-      std::cout << p.first << " => " << p.second << std::endl;
-      success = true;
-    }
-  }
-  assert(success);
-}
-
-void optional3(std::vector<std::pair<std::string, std::string>> translations) {
-  std::cout << std::endl
-            << "Optional 3: Perfectly balanced codes words of length 21"
-            << std::endl;
-  int count = 0;
-  for (auto p : translations) {
-    if (p.first.length() == 21 && isBalanced(p.second) == true) {
-      std::cout << p.first << " => " << p.second << std::endl;
-      count++;
-    }
-  }
-  assert(count == 2);
-}
-
-bool isBalanced(std::string a) {
-  int dots = 0;
-  int dashes = 0;
-  for (auto c : a) {
-    switch (c) {
-      case '.':
-        dots++;
-        break;
-      case '-':
-        dashes++;
-        break;
-      default:
-        assert(false);
-        break;
-    }
-  }
-  return (dots == dashes);
-}
-
-void optional4(std::vector<std::pair<std::string, std::string>> translations) {
-  std::cout << std::endl
-            << "Optional 4: Only 13 letter word that's code is a palidrome"
-            << std::endl;
-  bool success = false;
-  for (auto p : translations) {
-    if (p.first.length() == 13 && isPalindrome(p.second)) {
-      std::cout << p.first << " => " << p.second << std::endl;
-      success = true;
-    }
-  }
-  assert(success);
-}
-
-bool isPalindrome(std::string a) {
-  size_t i = 0;
-  size_t j = a.length() - 1;
-  while (i < j) {
-    if (a[i] != a[j]) {
-      return false;
-    }
-    i++;
-    j--;
-  }
-  return true;
+  interOptional1(inputs);
+  // interOptional2();
 }
