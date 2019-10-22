@@ -24,33 +24,42 @@ int countDigits(long long in);
 
 int main(int argc, char** argv) {
   long long val;
+  long long solution;
   long long result;
 
   // tests
   val = 366496LL;
+  solution = 4775107LL;
   result = incDigits(val);
   std::cout << val << " => " << result << std::endl;
   assert(result == 4775107LL);
+  result = incDigits(val);
+  std::cout << val << " => " << result << std::endl;
+  assert(result == solution);
 
   val = 12345LL;
+  solution = 23456LL;
   result = incDigits(val);
   std::cout << val << " => " << result << std::endl;
-  assert(result == 23456LL);
+  assert(result == solution);
 
   val = 7890LL;
+  solution = 89101LL;
   result = incDigits(val);
   std::cout << val << " => " << result << std::endl;
-  assert(result == 89101LL);
+  assert(result == solution);
 
   val = 1234567890LL;
+  solution = 23456789101LL;
   result = incDigits(val);
   std::cout << val << " => " << result << std::endl;
-  assert(result == 23456789101LL);
+  assert(result == solution);
 
   val = 366496LL;
+  solution = 4775107LL;
   result = incDigits(val);
   std::cout << val << " => " << result << std::endl;
-  assert(result == 4775107LL);
+  assert(result == solution);
 
   return 0;
 }
