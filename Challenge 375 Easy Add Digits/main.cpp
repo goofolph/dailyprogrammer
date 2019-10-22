@@ -15,6 +15,17 @@
 long long incDigits(long long in);
 
 /**
+ * Increments each digit in a number.
+ *
+ * Ex. 10 -> 21 and 89 -> 910
+ *
+ *
+ * param in input number
+ * returns in with each digit incremented.
+ */
+long long incDigitsRec(long long in);
+
+/**
  * Counts the number of base10 digits in a number.
  *
  * param in input nunber
@@ -88,4 +99,14 @@ int countDigits(long long in) {
     count++;
   }
   return count;
+}
+
+long long incDigitsRec(long long num) {
+  if (num < 10) return num + 1;
+  long long next = num % 10 + 1;
+  long long prev = incDigitsRec(num / 10);
+  if (next == 10)
+    return prev * 100 + next;
+  else
+    return prev * 10 + next;
 }
